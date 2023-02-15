@@ -1,0 +1,30 @@
+[
+  {
+    "title": "Weather",
+    "color": "#0096FF",
+    "link": "Details",
+    "icon": "weather-pouring",
+    "description": "some description for the boxes"
+  },
+  {
+    "title": "SBB",
+    "color": "#50C878",
+    "link": "Details",
+    "icon": "weather-pouring",
+    "description": "some description for the boxes"
+  },
+  {
+    "title": "Notizen",
+    "color": "#FF5733",
+    "link": "Details",
+    "icon": "weather-pouring",
+    "description": "some description for the boxes"
+  },
+  {
+    "title": "To do",
+    "color": "#D2042D",
+    "link": "Details",
+    "icon": "weather-pouring",
+    "description": "some description for the boxes"
+  }
+]

@@ -1,40 +1,47 @@
-import * as React from "react";
+import * as React from 'react';
 
-import Home, {LogoTitle} from './src/Screens/Home'
+import Home, { HeaderHome } from './src/Screens/Home';
 
-import DetailsScreen from "./src/Screens/Detail";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import AppLoading from 'expo-app-loading';
+import DetailsScreen from './src/Screens/Detail';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useFonts } from 'expo-font';
 
 const Stack = createNativeStackNavigator();
 
 function App() {
+  let [fontsLoaded] = useFonts({
+    'Vanilla-Regular': require('./assets/fonts/Vanilla-Caramel.otf')
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName="Home"
         screenOptions={{
+          headerShadowVisible: false,
           headerStyle: {
-            backgroundColor: "#f28f",
-          },
-          headerTintColor: "#fff",
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
-        }}
-      >
+            backgroundColor: '#ffffff'
+          }
+        }}>
         <Stack.Screen
           name="Home"
           component={Home}
           options={{
-            headerTitle: (props) => <LogoTitle {...props} />,
+            headerShown: false,
+            headerTitle: (props) => <HeaderHome {...props} />
           }}
         />
         <Stack.Screen
           name="Details"
           component={DetailsScreen}
           options={{
-            title: "Detail",
+            title: 'Detail'
           }}
         />
       </Stack.Navigator>
