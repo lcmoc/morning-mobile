@@ -3,12 +3,6 @@ import { Button, FlatList, SafeAreaView, StatusBar, StyleSheet, Text, View } fro
 import Box from '../../components/Box';
 import BoxData from './BoxData.json';
 
-export const HeaderHome = () => {
-  <View style={styles.HeaderContainer}>
-    <Text style={styles.HeaderTitle}>Home</Text>
-  </View>;
-};
-
 const Home = ({ navigation }) => {
   return (
     <View style={styles.Container}>
@@ -24,6 +18,7 @@ const Home = ({ navigation }) => {
               navigation={navigation}
               icon={item.icon}
               description={item.description}
+              link={item.link}
             />
           )}
           keyExtractor={(item, index) => `Box-${index}`}

@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 
-const Box = ({ title, color, navigation, description, icon }) => {
+const Box = ({ title, color, navigation, description, icon, link }) => {
   const styles = StyleSheet.create({
     Box: {
       height: 160,
@@ -28,12 +28,12 @@ const Box = ({ title, color, navigation, description, icon }) => {
       padding: 15
     },
     Description: {
-        color: '#ffffff'
+      color: '#ffffff'
     }
   });
 
   return (
-    <TouchableOpacity style={styles.Box} onPress={() => navigation.navigate('Details')}>
+    <TouchableOpacity style={styles.Box} onPress={() => navigation.navigate(link)}>
       <View style={styles.Wrapper}>
         <MaterialCommunityIcons name={icon} size={32} color="white" />
         <Text style={styles.BoxText}>{title}</Text>

@@ -5,6 +5,7 @@ import Home, { HeaderHome } from './src/Screens/Home';
 import AppLoading from 'expo-app-loading';
 import DetailsScreen from './src/Screens/Detail';
 import { NavigationContainer } from '@react-navigation/native';
+import Sbb from './src/Screens/Sbb';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts } from 'expo-font';
 
@@ -33,8 +34,7 @@ function App() {
           name="Home"
           component={Home}
           options={{
-            headerShown: false,
-            headerTitle: (props) => <HeaderHome {...props} />
+            headerShown: false
           }}
         />
         <Stack.Screen
@@ -42,6 +42,22 @@ function App() {
           component={DetailsScreen}
           options={{
             title: 'Detail'
+          }}
+        />
+        <Stack.Screen
+          name="Sbb"
+          component={Sbb}
+          options={{
+            title: 'Verbindungen',
+            headerStyle: {
+              backgroundColor: '#D2042D'
+            },
+            headerTintColor: '#ffffff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontFamily: 'Vanilla-Regular',
+              fontSize: 30,
+            }
           }}
         />
       </Stack.Navigator>
