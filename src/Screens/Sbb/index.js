@@ -2,6 +2,8 @@ import * as Location from 'expo-location';
 
 import {
   Button,
+  FlatList,
+  SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
@@ -16,18 +18,40 @@ import TouchBarItem from '../../components/TouchBarItem';
 import TouchBarItems from './TouchBarItems.json';
 import { getSbbTime } from '../../components/Helpers';
 
-const Sbb = () => {
+const Sbb = ({ navigation }) => {
   const [apiData, setApiData] = useState(null);
   const [journeyStartPoint, setJourneyStartPoint] = useState('Egg');
   const [journeyEndPoint, setJourneyEndPoint] = useState();
   const [send, setSend] = useState(false);
   const [customDestination, setCustomDestination] = useState(false);
   const [activeTouchItem, setActiveTouchItem] = useState('Winterthur');
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
+
+  let text = '';
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
+  }
 
   async function getDataFromAPI() {
     try {
       const response = await fetch(
-        `https://transport.opendata.ch/v1/connections?from=${journeyStartPoint}&to=${journeyEndPoint}`
+        `https://transport.opendata.ch/v1/connections?from=${journeyStartPoint}&to=${journeyEndPoint}&limit=10`
       );
 
       return await response.json();
@@ -92,17 +116,34 @@ const Sbb = () => {
     </View>
   );
 
-  const JourneyList = () => (
-    <View style={JourneyListStyles.TableContainer}>
-      <TouchableOpacity style={JourneyListStyles.TableBox}>
-        <View></View>
-        <Text>Test</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={JourneyListStyles.TableBox}>
-        <Text>Test</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  const JourneyList = () => {
+    return (
+      <SafeAreaView style={styles.SafeArea}>
+        <View style={JourneyListStyles.TableContainer}>
+          <FlatList
+            data={connections}
+            numColumns={1}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={JourneyListStyles.TableBox}
+                onPress={() => navigation.push('Details')}>
+                <Text style={JourneyListStyles.Text}>S18 Richtung Forch</Text>
+                <Text style={JourneyListStyles.Text}>
+                  19:03 -------------------------------------- 19:21
+                </Text>
+                <Text style={JourneyListStyles.Text}>10 min</Text>
+              </TouchableOpacity>
+            )}
+            keyExtractor={(item, index) => `Box-${index}`}
+          />
+        </View>
+      </SafeAreaView>
+    );
+  };
+
+  const handleSubmit = () => {
+    setSend(journeyStartPoint && journeyEndPoint ? true : false);
+  };
 
   return (
     <View style={styles.Page}>
@@ -115,6 +156,7 @@ const Sbb = () => {
             placeholderTextColor="#848884"
             onChangeText={(inputText) => setJourneyStartPoint(inputText)}
             value={journeyStartPoint}
+            onSubmitEditing={handleSubmit}
           />
           {customDestination && (
             <TextInput
@@ -123,13 +165,14 @@ const Sbb = () => {
               placeholderTextColor="#848884"
               onChangeText={(inputText) => setJourneyEndPoint(inputText)}
               value={journeyEndPoint}
+              onSubmitEditing={handleSubmit}
             />
           )}
         </View>
       </View>
       <StatusView />
       <JourneyList />
-
+      {/* <Text>{text}</Text> */}
       {/* <SafeAreaView style={styles.SafeArea}>
         <FlatList
           data={connections}
@@ -210,7 +253,7 @@ const StatusViewStyles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
-    width: 300,
+    width: 290,
     marginTop: 20
   },
   StatusItem: {
@@ -229,7 +272,7 @@ const JourneyListStyles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#161616',
     borderColor: '#161616',
-    width: 400,
+    width: 380,
     height: 100,
     marginTop: 10,
     borderWidth: 2,
@@ -242,6 +285,10 @@ const JourneyListStyles = StyleSheet.create({
     shadowOpacity: 0.34,
     shadowRadius: 6.27,
     elevation: 10
+  },
+  Text: {
+    color: '#ffffff',
+    marginTop: 4
   }
 });
 
