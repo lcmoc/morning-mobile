@@ -50,7 +50,7 @@ const Sbb = ({ navigation }) => {
   async function getDataFromAPI() {
     try {
       const response = await fetch(
-        `https://transport.opendata.ch/v1/connections?from=${journeyStartPoint}&to=${journeyEndPoint}&limit=10`
+        `https://transport.opendata.ch/v1/connections?from=Egg&to=Wintertuhr`
       );
 
       return await response.json();
@@ -136,13 +136,15 @@ const Sbb = ({ navigation }) => {
               const departureTime = getSbbTime(connection?.from?.departure || '');
               const arrivalTime = getSbbTime(connection?.to?.arrival || '');
 
-              console.log('xxx', connection?.products);
-
               return (
                 <TouchableOpacity
                   key={`train-departure-${departureTime}-train-arrival-${arrivalTime}`}
                   style={JourneyListStyles.TableBox}
-                  onPress={() => navigation.push('Sbbdetails')}>
+                  onPress={() =>
+                    navigation.push('Sbbdetails', {
+                      connection: connection
+                    })
+                  }>
                   {Trains(connection?.products, connection?.from?.departure)}
                   <Text style={JourneyListStyles.Text}>
                     {`${departureTime} -------------------------------------- ${arrivalTime}`}

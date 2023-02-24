@@ -1,4 +1,4 @@
-import { Button, FlatList, SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { StatusBar, StyleSheet, Text, View } from 'react-native';
 
 import Box from '../../components/Box';
 
