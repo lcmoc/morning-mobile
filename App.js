@@ -42,7 +42,16 @@ function App() {
           name="Details"
           component={DetailsScreen}
           options={{
-            title: 'Detail'
+            title: 'Home',
+            headerStyle: {
+              backgroundColor: '#D2042D'
+            },
+            headerTintColor: '#ffffff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontFamily: 'Vanilla-Regular',
+              fontSize: 30
+            }
           }}
         />
         <Stack.Screen

@@ -1,13 +1,13 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import React from 'react';
 
 const Box = ({ title, color, navigation, description, icon, link }) => {
   const styles = StyleSheet.create({
     Box: {
       height: 160,
-      width: 140,
+      width: 300,
       backgroundColor: color,
       flex: 1,
       borderWidth: 2,
@@ -35,7 +35,7 @@ const Box = ({ title, color, navigation, description, icon, link }) => {
   return (
     <TouchableOpacity style={styles.Box} onPress={() => navigation.navigate(link)}>
       <View style={styles.Wrapper}>
-        <MaterialCommunityIcons name={icon} size={32} color="white" />
+        <AntDesign name={icon} size={24} color="white" />
         <Text style={styles.BoxText}>{title}</Text>
         <Text style={styles.Description}>{description}</Text>
       </View>
