@@ -1,9 +1,9 @@
 import * as Location from 'expo-location';
 
+import React, { useEffect, useState } from 'react';
 import {
-  Button,
-  FlatList,
   SafeAreaView,
+  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
@@ -11,12 +11,11 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { getJourneyTime, getSbbTime } from '../../components/Helpers';
 
 import LoadingSpinner from '../../components/LoadingSpinner';
 import TouchBarItem from '../../components/TouchBarItem';
 import TouchBarItems from './TouchBarItems.json';
-import { getSbbTime } from '../../components/Helpers';
 
 const Sbb = ({ navigation }) => {
   const [apiData, setApiData] = useState(null);
@@ -74,8 +73,6 @@ const Sbb = ({ navigation }) => {
     return <LoadingSpinner loading={apiData === null} />;
   }
 
-  const connections = apiData?.connections;
-
   const handlePress = (destination, isCustomDestination) => {
     setActiveTouchItem(destination ? destination : 'custom');
 
@@ -116,26 +113,45 @@ const Sbb = ({ navigation }) => {
     </View>
   );
 
+  const Trains = (trains, id) => {
+    return (
+      <View style={JourneyListStyles.TrainContainer}>
+        {trains.map((train, index) => {
+          return (
+            <Text style={JourneyListStyles.Text} key={`train-${train}-time${id}-${index}`}>
+              {train}
+            </Text>
+          );
+        })}
+      </View>
+    );
+  };
+
   const JourneyList = () => {
     return (
       <SafeAreaView style={styles.SafeArea}>
         <View style={JourneyListStyles.TableContainer}>
-          <FlatList
-            data={connections}
-            numColumns={1}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={JourneyListStyles.TableBox}
-                onPress={() => navigation.push('Details')}>
-                <Text style={JourneyListStyles.Text}>S18 Richtung Forch</Text>
-                <Text style={JourneyListStyles.Text}>
-                  19:03 -------------------------------------- 19:21
-                </Text>
-                <Text style={JourneyListStyles.Text}>10 min</Text>
-              </TouchableOpacity>
-            )}
-            keyExtractor={(item, index) => `Box-${index}`}
-          />
+          <ScrollView>
+            {apiData?.connections.map((connection) => {
+              const departureTime = getSbbTime(connection?.from?.departure || '');
+              const arrivalTime = getSbbTime(connection?.to?.arrival || '');
+
+              console.log('xxx', connection?.products);
+
+              return (
+                <TouchableOpacity
+                  key={`train-departure-${departureTime}-train-arrival-${arrivalTime}`}
+                  style={JourneyListStyles.TableBox}
+                  onPress={() => navigation.push('Sbbdetails')}>
+                  {Trains(connection?.products, connection?.from?.departure)}
+                  <Text style={JourneyListStyles.Text}>
+                    {`${departureTime} -------------------------------------- ${arrivalTime}`}
+                  </Text>
+                  <Text style={JourneyListStyles.Text}>{getJourneyTime(connection?.duration)}</Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
         </View>
       </SafeAreaView>
     );
@@ -172,15 +188,6 @@ const Sbb = ({ navigation }) => {
       </View>
       <StatusView />
       <JourneyList />
-      {/* <Text>{text}</Text> */}
-      {/* <SafeAreaView style={styles.SafeArea}>
-        <FlatList
-          data={connections}
-          numColumns={1}
-          renderItem={({ connection }) => <Text>{connection?.from?.departure}</Text>}
-          keyExtractor={(item, index) => `Connection-${index}`}
-        />
-      </SafeAreaView> */}
     </View>
   );
 };
@@ -265,7 +272,8 @@ const JourneyListStyles = StyleSheet.create({
   TableContainer: {
     marginTop: 10,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginBottom: 100
   },
   TableBox: {
     justifyContent: 'center',
@@ -288,7 +296,13 @@ const JourneyListStyles = StyleSheet.create({
   },
   Text: {
     color: '#ffffff',
-    marginTop: 4
+    marginTop: 4,
+    marginRight: 10
+  },
+  TrainContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row'
   }
 });
 

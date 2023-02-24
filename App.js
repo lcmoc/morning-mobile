@@ -6,6 +6,7 @@ import AppLoading from 'expo-app-loading';
 import DetailsScreen from './src/Screens/Detail';
 import { NavigationContainer } from '@react-navigation/native';
 import Sbb from './src/Screens/Sbb';
+import SbbDetails from './src/Screens/Sbb/SbbDetails';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts } from 'expo-font';
 
@@ -56,7 +57,23 @@ function App() {
             headerTitleStyle: {
               fontWeight: 'bold',
               fontFamily: 'Vanilla-Regular',
-              fontSize: 30,
+              fontSize: 30
+            }
+          }}
+        />
+        <Stack.Screen
+          name="Sbbdetails"
+          component={SbbDetails}
+          options={{
+            title: 'Verbindung',
+            headerStyle: {
+              backgroundColor: '#D2042D'
+            },
+            headerTintColor: '#ffffff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontFamily: 'Vanilla-Regular',
+              fontSize: 25
             }
           }}
         />
