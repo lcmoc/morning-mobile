@@ -13,10 +13,19 @@ const SbbDetails = ({ route, navigation }) => {
     arrivalStation,
     train,
     departurePlatform,
-    arrivalPlatform
+    arrivalPlatform,
+    passList
   }) => {
     return (
-      <TouchableOpacity style={JourneyListStyles.TableContainer}>
+      <TouchableOpacity
+        style={JourneyListStyles.TableContainer}
+        onPress={() =>
+          passList &&
+          navigation.navigate('SbbJourney', {
+            passList: passList,
+            arrivalTime: arrivalTime
+          })
+        }>
         <View style={JourneyListStyles.TableBox}>
           <View style={JourneyListStyles.TimeContainer}>
             <Text style={JourneyListStyles.TimeText}>{departureTime}</Text>
@@ -38,42 +47,45 @@ const SbbDetails = ({ route, navigation }) => {
 
   return (
     <View style={styles.Page}>
-      <ScrollView>
-        {connection?.sections.map((section, index) => {
-          const departureTime = getSbbTime(section?.departure?.departure || '');
-          const arrivalTime = getSbbTime(section?.arrival?.arrival || '');
+      <View style={styles.PageMargin}>
+        <ScrollView>
+          {connection?.sections.map((section, index) => {
+            const departureTime = getSbbTime(section?.departure?.departure || '');
+            const arrivalTime = getSbbTime(section?.arrival?.arrival || '');
 
-          const departureStation = section?.departure?.station?.name || '';
-          const arrivalStation = section?.arrival?.station?.name || '';
+            const departureStation = section?.departure?.station?.name || '';
+            const arrivalStation = section?.arrival?.station?.name || '';
 
-          const departurePlatform = section?.departure?.platform || '';
-          const arrivalPlatform = section?.arrival?.platform || '';
+            const departurePlatform = section?.departure?.platform || '';
+            const arrivalPlatform = section?.arrival?.platform || '';
 
-          const train =
-            (section?.journey && `${section?.journey?.category} ${section?.journey?.number}`) ||
-            'Laufen';
+            const train =
+              (section?.journey && `${section?.journey?.category} ${section?.journey?.number}`) ||
+              'Laufen';
 
-          return (
-            <Stations
-              key={`connection-${index}`}
-              departureTime={departureTime}
-              arrivalTime={arrivalTime}
-              departureStation={departureStation}
-              arrivalStation={arrivalStation}
-              departurePlatform={departurePlatform}
-              arrivalPlatform={arrivalPlatform}
-              train={train}
-            />
-          );
-        })}
-      </ScrollView>
+            return (
+              <Stations
+                key={`connection-${index}`}
+                departureTime={departureTime}
+                arrivalTime={arrivalTime}
+                departureStation={departureStation}
+                arrivalStation={arrivalStation}
+                departurePlatform={departurePlatform}
+                arrivalPlatform={arrivalPlatform}
+                train={train}
+                passList={section?.journey?.passList}
+              />
+            );
+          })}
+        </ScrollView>
+      </View>
     </View>
   );
 };
 
 const JourneyListStyles = StyleSheet.create({
   TableContainer: {
-    marginTop: 10,
+    marginTop: 20,
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -135,6 +147,9 @@ const styles = StyleSheet.create({
   Container: {
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  PageMargin: {
+    marginTop: 40
   }
 });
 

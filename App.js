@@ -7,6 +7,7 @@ import DetailsScreen from './src/Screens/Detail';
 import { NavigationContainer } from '@react-navigation/native';
 import Sbb from './src/Screens/Sbb';
 import SbbDetails from './src/Screens/Sbb/SbbDetails';
+import SbbJourney from './src/Screens/Sbb/SbbJourney';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts } from 'expo-font';
 
@@ -75,6 +76,22 @@ function App() {
           component={SbbDetails}
           options={{
             title: 'Verbindung',
+            headerStyle: {
+              backgroundColor: '#D2042D'
+            },
+            headerTintColor: '#ffffff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontFamily: 'Vanilla-Regular',
+              fontSize: 25
+            }
+          }}
+        />
+        <Stack.Screen
+          name="SbbJourney"
+          component={SbbJourney}
+          options={{
+            title: 'Fahrinfo',
             headerStyle: {
               backgroundColor: '#D2042D'
             },
