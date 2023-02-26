@@ -113,51 +113,47 @@ const Sbb = ({ navigation }) => {
     </View>
   );
 
-  const Trains = (trains, id) => {
-    return (
-      <View style={JourneyListStyles.TrainContainer}>
-        {trains.map((train, index) => {
-          return (
-            <Text style={JourneyListStyles.Text} key={`train-${train}-time${id}-${index}`}>
-              {train}
-            </Text>
-          );
-        })}
+  const Trains = (trains, id) => (
+    <View style={JourneyListStyles.TrainContainer}>
+      {trains.map((train, index) => {
+        return (
+          <Text style={JourneyListStyles.Text} key={`train-${train}-time${id}-${index}`}>
+            {train}
+          </Text>
+        );
+      })}
+    </View>
+  );
+
+  const JourneyList = () => (
+    <SafeAreaView style={styles.SafeArea}>
+      <View style={JourneyListStyles.TableContainer}>
+        <ScrollView>
+          {apiData?.connections.map((connection) => {
+            const departureTime = getSbbTime(connection?.from?.departure || '');
+            const arrivalTime = getSbbTime(connection?.to?.arrival || '');
+
+            return (
+              <TouchableOpacity
+                key={`train-departure-${departureTime}-train-arrival-${arrivalTime}`}
+                style={JourneyListStyles.TableBox}
+                onPress={() =>
+                  navigation.push('Sbbdetails', {
+                    connection: connection
+                  })
+                }>
+                {Trains(connection?.products, connection?.from?.departure)}
+                <Text style={JourneyListStyles.Text}>
+                  {`${departureTime} -------------------------------------- ${arrivalTime}`}
+                </Text>
+                <Text style={JourneyListStyles.Text}>{getJourneyTime(connection?.duration)}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
       </View>
-    );
-  };
-
-  const JourneyList = () => {
-    return (
-      <SafeAreaView style={styles.SafeArea}>
-        <View style={JourneyListStyles.TableContainer}>
-          <ScrollView>
-            {apiData?.connections.map((connection) => {
-              const departureTime = getSbbTime(connection?.from?.departure || '');
-              const arrivalTime = getSbbTime(connection?.to?.arrival || '');
-
-              return (
-                <TouchableOpacity
-                  key={`train-departure-${departureTime}-train-arrival-${arrivalTime}`}
-                  style={JourneyListStyles.TableBox}
-                  onPress={() =>
-                    navigation.push('Sbbdetails', {
-                      connection: connection
-                    })
-                  }>
-                  {Trains(connection?.products, connection?.from?.departure)}
-                  <Text style={JourneyListStyles.Text}>
-                    {`${departureTime} -------------------------------------- ${arrivalTime}`}
-                  </Text>
-                  <Text style={JourneyListStyles.Text}>{getJourneyTime(connection?.duration)}</Text>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
-        </View>
-      </SafeAreaView>
-    );
-  };
+    </SafeAreaView>
+  );
 
   const handleSubmit = () => {
     setSend(journeyStartPoint && journeyEndPoint ? true : false);

@@ -1,9 +1,7 @@
 import * as React from 'react';
 
-import Home, { HeaderHome } from './src/Screens/Home';
-
 import AppLoading from 'expo-app-loading';
-import DetailsScreen from './src/Screens/Detail';
+import Home from './src/Screens/Home';
 import { NavigationContainer } from '@react-navigation/native';
 import Sbb from './src/Screens/Sbb';
 import SbbDetails from './src/Screens/Sbb/SbbDetails';
@@ -35,13 +33,6 @@ function App() {
         <Stack.Screen
           name="Home"
           component={Home}
-          options={{
-            headerShown: false
-          }}
-        />
-        <Stack.Screen
-          name="Details"
-          component={DetailsScreen}
           options={{
             title: 'Home',
             headerStyle: {

@@ -1,9 +1,9 @@
-import { ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
 
 import React from 'react';
 import { getSbbTime } from '../../../components/Helpers';
 
-const SbbJourney = ({ route, navigation }) => {
+const SbbJourney = ({ route }) => {
   const { passList, arrivalTime } = route.params;
 
   const Times = () => {

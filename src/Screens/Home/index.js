@@ -1,32 +1,24 @@
-import { Button, FlatList, SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { StatusBar, StyleSheet, Text, View } from 'react-native';
 
 import Box from '../../components/Box';
-import BoxData from './BoxData.json';
 
 const Home = ({ navigation }) => {
   return (
     <View style={styles.Container}>
-      <Text style={styles.HeaderTitle}>Home</Text>
-      <SafeAreaView style={styles.SafeArea}>
-        <FlatList
-          data={BoxData}
-          numColumns={2}
-          renderItem={({ item }) => (
-            <Box
-              title={item.title}
-              color={item.color}
-              navigation={navigation}
-              icon={item.icon}
-              description={item.description}
-              link={item.link}
-            />
-          )}
-          keyExtractor={(item, index) => `Box-${index}`}
+      <Text style={styles.HeaderTitle}>Sbb-Student</Text>
+      <View style={styles.BoxContainer}>
+        <Box
+          title="Verbindungen"
+          color="#D2042D"
+          link="Sbb"
+          icon="fork"
+          description="Zu den Verbindungen"
+          navigation={navigation}
         />
-      </SafeAreaView>
-      <View style={styles.CenterContainer}>
-        <Button title="Go to Details" onPress={() => navigation.navigate('Details')} />
       </View>
+      <Text style={styles.AppDescription}>
+        Diese App ist dafür da die Bahnverbindung für Schüler zu vereinfachen
+      </Text>
     </View>
   );
 };
@@ -62,16 +54,25 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     fontSize: 50,
     fontFamily: 'Vanilla-Regular',
-    marginLeft: 20,
     marginTop: 40
   },
   Container: {
     flex: 1,
-    backgroundColor: '#ffffff'
+    backgroundColor: '#ffffff',
+    alignItems: 'center'
   },
   SafeArea: {
     marginTop: 30,
     paddingTop: StatusBar.currentHeight
+  },
+  BoxContainer: {
+    height: 200,
+    marginTop: 20
+  },
+  AppDescription: {
+    marginTop: 20,
+    fontSize: 20,
+    padding: 27
   }
 });
 

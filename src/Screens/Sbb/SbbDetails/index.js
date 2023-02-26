@@ -6,7 +6,7 @@ import { getSbbTime } from '../../../components/Helpers';
 const SbbDetails = ({ route, navigation }) => {
   const { connection } = route.params;
 
-  const Stations = ({
+  const Journeys = ({
     departureTime,
     arrivalTime,
     departureStation,
@@ -64,7 +64,7 @@ const SbbDetails = ({ route, navigation }) => {
               'Laufen';
 
             return (
-              <Stations
+              <Journeys
                 key={`connection-${index}`}
                 departureTime={departureTime}
                 arrivalTime={arrivalTime}
