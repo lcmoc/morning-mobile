@@ -19,11 +19,11 @@ import TouchBarItems from './TouchBarItems.json';
 
 const Sbb = ({ navigation }) => {
   const [apiData, setApiData] = useState(null);
-  const [journeyStartPoint, setJourneyStartPoint] = useState('Egg');
+  const [journeyStartPoint, setJourneyStartPoint] = useState('');
   const [journeyEndPoint, setJourneyEndPoint] = useState();
   const [send, setSend] = useState(false);
   const [customDestination, setCustomDestination] = useState(false);
-  const [activeTouchItem, setActiveTouchItem] = useState('Winterthur');
+  const [activeTouchItem, setActiveTouchItem] = useState('');
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
@@ -50,7 +50,7 @@ const Sbb = ({ navigation }) => {
   async function getDataFromAPI() {
     try {
       const response = await fetch(
-        `https://transport.opendata.ch/v1/connections?from=Egg&to=Wintertuhr`
+        `https://transport.opendata.ch/v1/connections?from=${journeyStartPoint}&to=${journeyEndPoint}&limit=10`
       );
 
       return await response.json();
@@ -67,7 +67,7 @@ const Sbb = ({ navigation }) => {
       .catch((error) => {
         console.error(error); //eslint-disable-line
       });
-  }, [send]);
+  }, [send, activeTouchItem]);
 
   if (apiData === null) {
     return <LoadingSpinner loading={apiData === null} />;
@@ -159,6 +159,13 @@ const Sbb = ({ navigation }) => {
     setSend(journeyStartPoint && journeyEndPoint ? true : false);
   };
 
+  const handleChange = (inputText, inputName) => {
+    setSend(false);
+
+    inputName === 'startPoint' && setJourneyStartPoint(inputText);
+    inputName === 'endPoint' && setJourneyEndPoint(inputText);
+  };
+
   return (
     <View style={styles.Page}>
       <TouchBar />
@@ -168,7 +175,7 @@ const Sbb = ({ navigation }) => {
             style={DestinationFormStyles.LocalPositionInput}
             placeholder="Von"
             placeholderTextColor="#848884"
-            onChangeText={(inputText) => setJourneyStartPoint(inputText)}
+            onChangeText={(inputText) => handleChange(inputText, 'startPoint')}
             value={journeyStartPoint}
             onSubmitEditing={handleSubmit}
           />
@@ -177,7 +184,7 @@ const Sbb = ({ navigation }) => {
               style={DestinationFormStyles.DestinationInput}
               placeholder="Nach"
               placeholderTextColor="#848884"
-              onChangeText={(inputText) => setJourneyEndPoint(inputText)}
+              onChangeText={(inputText) => handleChange(inputText, 'endPoint')}
               value={journeyEndPoint}
               onSubmitEditing={handleSubmit}
             />
