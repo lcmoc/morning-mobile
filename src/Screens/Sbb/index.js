@@ -35,17 +35,26 @@ const Sbb = ({ navigation }) => {
         return;
       }
 
-      let location = await Location.getCurrentPositionAsync({});
+      let location = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.High
+      });
+
       setLocation(location);
     })();
   }, []);
 
-  let text = '';
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
+  useEffect(() => {
+    (async () => {
+      if (location) {
+        let { latitude, longitude } = location.coords;
+        let regionName = await Location.reverseGeocodeAsync({
+          longitude,
+          latitude
+        });
+        setJourneyStartPoint(regionName[0].city);
+      }
+    })();
+  }, [location]);
 
   async function getDataFromAPI() {
     try {
@@ -166,6 +175,11 @@ const Sbb = ({ navigation }) => {
     inputName === 'endPoint' && setJourneyEndPoint(inputText);
   };
 
+  const handleFocus = (inputName) => {
+    inputName === 'startPoint' && setJourneyStartPoint('');
+    inputName === 'endPoint' && setJourneyEndPoint('');
+  };
+
   return (
     <View style={styles.Page}>
       <TouchBar />
@@ -178,6 +192,7 @@ const Sbb = ({ navigation }) => {
             onChangeText={(inputText) => handleChange(inputText, 'startPoint')}
             value={journeyStartPoint}
             onSubmitEditing={handleSubmit}
+            onFocus={() => handleFocus('startPoint')}
           />
           {customDestination && (
             <TextInput
@@ -187,6 +202,7 @@ const Sbb = ({ navigation }) => {
               onChangeText={(inputText) => handleChange(inputText, 'endPoint')}
               value={journeyEndPoint}
               onSubmitEditing={handleSubmit}
+              onFocus={() => handleFocus('endPoint')}
             />
           )}
         </View>
