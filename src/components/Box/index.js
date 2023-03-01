@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import React from 'react';
 
-const Box = ({ title, color, navigation, description, icon, link }) => {
+const Box = ({ title, color, navigation, description, icon, link, city }) => {
   const styles = StyleSheet.create({
     Box: {
       height: 160,
@@ -33,7 +33,13 @@ const Box = ({ title, color, navigation, description, icon, link }) => {
   });
 
   return (
-    <TouchableOpacity style={styles.Box} onPress={() => navigation.navigate(link)}>
+    <TouchableOpacity
+      style={styles.Box}
+      onPress={() =>
+        navigation.navigate(link, {
+          city: city
+        })
+      }>
       <View style={styles.Wrapper}>
         <AntDesign name={icon} size={24} color="white" />
         <Text style={styles.BoxText}>{title}</Text>

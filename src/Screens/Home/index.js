@@ -1,8 +1,44 @@
+import * as Location from 'expo-location';
+
+import React, { useEffect, useState } from 'react';
 import { StatusBar, StyleSheet, Text, View } from 'react-native';
 
 import Box from '../../components/Box';
 
 const Home = ({ navigation }) => {
+  const [location, setLocation] = useState(null);
+  const [city, setCity] = useState();
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.High
+      });
+
+      setLocation(location);
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      if (location) {
+        let { latitude, longitude } = location.coords;
+        let regionName = await Location.reverseGeocodeAsync({
+          longitude,
+          latitude
+        });
+        setCity(regionName[0].city);
+      }
+    })();
+  }, [location]);
+
   return (
     <View style={styles.Container}>
       <Text style={styles.HeaderTitle}>Sbb-Student</Text>
@@ -14,6 +50,7 @@ const Home = ({ navigation }) => {
           icon="fork"
           description="Zu den Verbindungen"
           navigation={navigation}
+          city={!errorMsg && city}
         />
       </View>
       <Text style={styles.AppDescription}>

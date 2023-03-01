@@ -1,5 +1,3 @@
-import * as Location from 'expo-location';
-
 import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
@@ -17,44 +15,15 @@ import LoadingSpinner from '../../components/LoadingSpinner';
 import TouchBarItem from '../../components/TouchBarItem';
 import TouchBarItems from './TouchBarItems.json';
 
-const Sbb = ({ navigation }) => {
+const Sbb = ({ route, navigation }) => {
+  const { city } = route.params;
+
   const [apiData, setApiData] = useState(null);
-  const [journeyStartPoint, setJourneyStartPoint] = useState('');
+  const [journeyStartPoint, setJourneyStartPoint] = useState(city || '');
   const [journeyEndPoint, setJourneyEndPoint] = useState();
   const [send, setSend] = useState(false);
   const [customDestination, setCustomDestination] = useState(false);
   const [activeTouchItem, setActiveTouchItem] = useState('');
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
-
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
-      }
-
-      let location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.High
-      });
-
-      setLocation(location);
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      if (location) {
-        let { latitude, longitude } = location.coords;
-        let regionName = await Location.reverseGeocodeAsync({
-          longitude,
-          latitude
-        });
-        setJourneyStartPoint(regionName[0].city);
-      }
-    })();
-  }, [location]);
 
   async function getDataFromAPI() {
     try {
